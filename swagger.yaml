@@ -1,0 +1,162 @@
+swagger: '2.0'
+info:
+  description: >-
+    A common RESTful interface for securing authentication on devices with awful
+    input mechanisms. Learn more
+    [here](https://github.com/bengreenier/oauth24d).
+  version: 1.0.0
+  title: oauth24d
+  license:
+    name: MIT
+    url: 'https://github.com/bengreenier/oauth24d/blob/master/LICENSE'
+host: example.com
+basePath: /oauth24d
+schemes:
+  - http
+  - https
+paths:
+  /new:
+    get:
+      summary: Retrieves information about the created authorization session.
+      description: ''
+      operationId: createDeviceAuth
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: success response
+          schema:
+            $ref: '#/definitions/NewSuccess'
+        '500':
+          description: failure response
+  /poll:
+    get:
+      summary: >-
+        Polls a given authorization session to determine if credentials have
+        been supplied. This endpoint is expected to be polled at the `interval`
+        provided as given in a `GET /new` success response.
+      description: ''
+      operationId: pollDeviceAuth
+      produces:
+        - application/json
+      parameters:
+        - name: device_code
+          in: query
+          description: same value as given in a `GET /new` success response.
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: success response
+          schema:
+            $ref: '#/definitions/PollSuccess'
+        '400':
+          description: failure response
+          schema:
+            $ref: '#/definitions/PollOrSubmitFailure'
+  /submit:
+    post:
+      summary: >-
+        Completes credential handoff from authenticated users to a particular
+        authorization session.
+      description: ''
+      operationId: submitUserAuth
+      security:
+        - example_auth:
+            - none
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - name: user_code
+          in: formData
+          description: same value as given in a `GET /new` success response.
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: success response
+          schema:
+            $ref: '#/definitions/SubmitSuccess'
+        '400':
+          description: failure response
+          schema:
+            $ref: '#/definitions/PollOrSubmitFailure'
+  /login:
+    get:
+      summary: >-
+        Presents an interface with which users may submit `user_code` values to
+        successfully authenticate a given authorization session.
+      description: ''
+      operationId: loginUserAuth
+      security:
+        - example_auth:
+            - none
+      produces:
+        - text/html
+      responses:
+        '200':
+          description: >-
+            Responds with a `text/html` payload containing the necessary logic
+            to submit a `user_code` to the /submit endpoint.
+        '500':
+          description: failure response
+securityDefinitions:
+  example_auth:
+    type: oauth2
+    authorizationUrl: 'https://example.com/oauth2/dialog'
+    tokenUrl: 'https://example.com/oauth2/token'
+    flow: accessCode
+    scopes:
+      none: no additional scope needed
+definitions:
+  NewSuccess:
+    type: object
+    properties:
+      device_code:
+        type: string
+        format: uuid
+        example: 1a1da233-099c-4434-9a3c-9d4bbecff192
+      user_code:
+        type: string
+        format: uuid
+        example: 6b7-4450
+      expires_in:
+        type: integer
+        format: int64
+        example: 1800
+      interval:
+        type: integer
+        format: int64
+        example: 5
+      verification_url:
+        type: string
+        example: 'https://example.com/oauth24d/login'
+  PollSuccess:
+    type: object
+    properties:
+      access_token:
+        type: string
+        example: aigojeroigjegrg3h48943759347t298g34guj39vj48932893==
+  PollOrSubmitFailure:
+    type: object
+    properties:
+      error:
+        type: string
+        enum:
+          - malformed request
+          - code expired
+          - pending
+        example: pending
+  SubmitSuccess:
+    type: object
+    properties:
+      status:
+        type: string
+        example: OK
+externalDocs:
+  description: Github Repo
+  url: 'https://github.com/bengreenier/oauth24d'
