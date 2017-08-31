@@ -6,6 +6,8 @@ A common pattern and RESTful interface for securing authentication on devices wi
 
 ## API
 
+> Note: The following information is available in swagger format as well ([raw](./swagger.yaml) - [redoc](https://rebilly.github.io/ReDoc/?url=https://raw.githubusercontent.com/bengreenier/oauth24d/master/swagger.yaml)).
+
 > This RESTful API speaks soley `application/json`, and it is expected that all endpoints respond in this format.
 
 The expectation is that any device that implements support for communicating with services that implement the following
@@ -88,11 +90,13 @@ Where:
 
 > Note: This endpoint must be authenticated, to ensure only users with valid credentials may access it.
 
-Completes credential handoff from authenticated users to a particular authorization session.
+Submits credentials on behalf of an authenticated user.
 
 #### POST
 
 > Note: This endpoint expects `application/x-www-form-urlencoded` data be submitted in the body.
+
+Completes credential handoff from authenticated users to a particular authorization session.
 
 ```
 user_code=6b7-4450
@@ -186,3 +190,7 @@ specified for the given authorization session:
     error: "pending"
 }
 ```
+
+## Examples
+
++ [Google OAuth2 For Devices](https://developers.google.com/identity/protocols/OAuth2ForDevices)
