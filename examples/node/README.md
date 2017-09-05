@@ -4,7 +4,7 @@ Implement oauth24d using NodeJS :sparkles:
 
 ## Details
 
-A NodeJS sample app using `express`, `passport`, and an in memory "database". First run `npm install`, and then `npm start` to access the implementation yourself (defaults to port `3000`) or `npm install` to run the automated tests.
+A NodeJS sample app using `express`, `passport`, and an in memory "database". First run `npm install`, and then `npm start` to access the implementation yourself (defaults to port `3000`) or `npm test` to run the automated tests.
 
 You can customize the implementation with the following environment variables:
 
