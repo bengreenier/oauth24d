@@ -193,4 +193,5 @@ specified for the given authorization session:
 
 ## Examples
 
++ [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest#interactive-log-in)
 + [Google OAuth2 For Devices](https://developers.google.com/identity/protocols/OAuth2ForDevices)
